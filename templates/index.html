@@ -27,11 +27,6 @@
         let selectedAnswer = "";
         let isProcessingAnswer = false;
 
-        function calculateProgress(currentQuestion, totalQuestions) {
-            // 根据当前题目计算进度，第1题就是10%，第2题就是20%，以此类推
-            return (currentQuestion / totalQuestions) * 100;
-        }
-
         function updateQuestion(data) {
             // 清除反馈信息
             const feedback = document.getElementById("feedback");
@@ -47,9 +42,6 @@
                 optionsHTML += `<button class="option-btn" onclick="submitAnswer(this)" data-answer="${option}">${option}</button>`;
             });
             document.getElementById("options-container").innerHTML = optionsHTML;
-
-            // 更新进度条
-            document.getElementById("progress-bar").style.width = data.progress + "%";
 
             // 启用所有按钮
             enableButtons(true);
@@ -71,6 +63,7 @@
                     window.location.href = data.redirect_url;
                     return;
                 }
+                document.getElementById("progress-bar").style.width = data.progress + "%";
                 updateQuestion(data);
             });
         }
@@ -99,11 +92,9 @@
                 });
                 
                 const data = await response.json();
-                
-                if (data.finished) {
-                    window.location.href = data.redirect_url;
-                    return;
-                }
+
+                // 立即更新进度条
+                document.getElementById("progress-bar").style.width = data.progress + "%";
 
                 // 显示反馈
                 let feedback = document.getElementById("feedback");
@@ -115,7 +106,15 @@
                 }
                 feedback.classList.remove("hidden");
 
-                // 等待显示反馈后更新问题
+                // 如果是最后一题，延迟跳转
+                if (data.finished) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 1500);
+                    return;
+                }
+
+                // 等待显示反馈后更新题目
                 setTimeout(() => {
                     updateQuestion(data);
                 }, 1500);

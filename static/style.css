@@ -58,6 +58,9 @@ h2 {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.1s ease-in-out, background-color 0.3s;
+    -webkit-tap-highlight-color: transparent;  /* 移除移动设备上的点击高亮 */
+    outline: none;  /* 移除默认的焦点轮廓 */
+    user-select: none;  /* 防止文本被选中 */
 }
 
 .option-btn:hover {
