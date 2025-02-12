@@ -25,7 +25,12 @@
 
     <script>
         let selectedAnswer = "";
-        let isProcessingAnswer = false;  // 添加标志位防止重复提交
+        let isProcessingAnswer = false;
+
+        function calculateProgress(currentQuestion, totalQuestions) {
+            // 根据当前题目计算进度，第1题就是10%，第2题就是20%，以此类推
+            return (currentQuestion / totalQuestions) * 100;
+        }
 
         function updateQuestion(data) {
             // 清除反馈信息
@@ -78,8 +83,8 @@
         }
 
         async function submitAnswer(button) {
-            if (isProcessingAnswer) return;  // 如果正在处理答案，直接返回
-            isProcessingAnswer = true;  // 设置处理标志
+            if (isProcessingAnswer) return;
+            isProcessingAnswer = true;
 
             // 禁用所有按钮
             enableButtons(false);
@@ -116,8 +121,8 @@
                 }, 1500);
             } catch (error) {
                 console.error("Error submitting answer:", error);
-                isProcessingAnswer = false;  // 发生错误时重置处理标志
-                enableButtons(true);  // 重新启用按钮
+                isProcessingAnswer = false;
+                enableButtons(true);
             }
         }
 

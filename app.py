@@ -46,7 +46,8 @@ def next_question():
             return jsonify({"finished": True, "redirect_url": url_for("result")})
 
         next_question = quiz[session["current_question"]]
-        progress = int((session["current_question"] / len(quiz)) * 100)
+        # 计算进度 - 当前正在做的题目就是进度百分比
+        progress = int((session["current_question"] + 1) / len(quiz) * 100)
 
         return jsonify({
             "finished": False,
@@ -58,15 +59,17 @@ def next_question():
             "progress": progress
         })
 
-    # 处理 GET 请求（初始化页面时）
-    progress = int((session["current_question"] / len(quiz)) * 100)
+    # 处理 GET 请求（初始化页面/第一题）
+    # 计算进度 - 第一题就应该显示10%
+    progress = int((current_question + 1) / len(quiz) * 100)
+    
     return jsonify({
         "finished": False,
         "question_number": current_question + 1,
         "english": quiz[current_question]["english"],
         "options": quiz[current_question]["options"],
-        "correct": None,  # GET 请求不返回正确答案
-        "progress": progress
+        "correct": None,
+        "progress": progress  # 返回进度
     })
 
 @app.route("/result")
