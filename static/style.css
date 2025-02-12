@@ -68,6 +68,13 @@ h2 {
     color: white;
 }
 
+/* 移除移动设备上的点击状态样式 */
+.option-btn:active,
+.option-btn:focus {
+    background: white;
+    color: inherit;
+}
+
 .option-btn:active {
     transform: scale(0.9);  /* 按下时按钮缩小 */
 }
