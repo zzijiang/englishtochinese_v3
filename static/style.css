@@ -54,13 +54,11 @@ h2 {
     padding: 15px;
     font-size: 16px;
     border: 2px solid #007bff;
-    background: white;
+    background-color: white !important;  /* 强制使用白色背景 */
+    color: black !important;  /* 强制使用黑色文字 */
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.1s ease-in-out, background-color 0.3s;
-    -webkit-tap-highlight-color: transparent;  /* 移除移动设备上的点击高亮 */
-    outline: none;  /* 移除默认的焦点轮廓 */
-    user-select: none;  /* 防止文本被选中 */
+    transition: transform 0.1s ease-in-out;
 }
 
 .option-btn:hover {
@@ -80,13 +78,13 @@ h2 {
 }
 
 .option-btn.correct {
-    background: green;
-    color: white;
+    background: green!important;
+    color: white!important;
 }
 
 .option-btn.wrong {
-    background: red;
-    color: white;
+    background: red!important;
+    color: white!important;
 }
 
 /* 进度条容器 */
@@ -144,22 +142,23 @@ h2.wrong-title {
     font-weight: bold;
 }
 
-/* “再试一次” 按钮样式 */
+/* “再来一局” 按钮样式 */
 .restart-btn {
     display: inline-block;
     margin-top: 20px;
     padding: 12px 20px;
     font-size: 18px;
     border: none;
-    background-color: #7cf17c;
-    color: black;
+    background-color: #007bff;
+    color: white !important;  /* 修改为白色并加上 !important */
+    font-weight: bold;       /* 添加粗体 */
     border-radius: 10px;
     cursor: pointer;
     text-decoration: none;
 }
 
 .restart-btn:hover {
-    background-color: #57d057;
+    background-color: #007bff;
 }
 
 #feedback {

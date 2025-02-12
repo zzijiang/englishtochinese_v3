@@ -96,8 +96,17 @@
                 // 立即更新进度条
                 document.getElementById("progress-bar").style.width = data.progress + "%";
 
-                // 显示反馈
+                // 显示反馈和设置选项样式
                 let feedback = document.getElementById("feedback");
+                
+                // 找到用户点击的按钮并添加对应样式
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons.forEach(btn => {
+                    if (btn.getAttribute('data-answer') === userAnswer) {
+                        btn.classList.add(data.is_correct ? 'correct' : 'wrong');
+                    }
+                });
+
                 if (data.is_correct) {
                     feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">🎉</span>`;
                     feedback.style.color = "green";
