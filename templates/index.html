@@ -108,7 +108,7 @@
                 });
 
                 if (data.is_correct) {
-                    feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">🎉</span>`;
+                    feedback.innerHTML = `✅ <span style="color: rgb(120, 233, 120)">正确！ <span class="correct-emoji">🎉</span>`;
                     feedback.style.color = "green";
                 } else {
                     feedback.innerHTML = `❌ <span style="color: red">错误！</span><span class="black-text"> 正确答案：</span> <span class="green-text">${data.correct}</span>`;

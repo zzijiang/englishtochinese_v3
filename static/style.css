@@ -78,7 +78,7 @@ h2 {
 }
 
 .option-btn.correct {
-    background: green!important;
+    background: rgb(120, 233, 120)!important;
     color: white!important;
 }
 
@@ -132,7 +132,7 @@ h2.wrong-title {
 
 /* 正确答案（绿色） */
 .correct {
-    color: green;
+    color: rgb(120, 233, 120);
     font-weight: bold;
 }
 
@@ -149,16 +149,12 @@ h2.wrong-title {
     padding: 12px 20px;
     font-size: 18px;
     border: none;
-    background-color: #007bff;
-    color: white !important;  /* 修改为白色并加上 !important */
-    font-weight: bold;       /* 添加粗体 */
+    background-color: rgb(120, 233, 120);
+    color: rgb(0, 0, 0) !important;  /* 修改为白色并加上 !important */
+
     border-radius: 10px;
     cursor: pointer;
     text-decoration: none;
-}
-
-.restart-btn:hover {
-    background-color: #007bff;
 }
 
 #feedback {
@@ -179,7 +175,7 @@ h2.wrong-title {
 
 /* 绿色的正确答案 */
 .green-text {
-    color: green;
+    color: rgb(120, 233, 120);
     font-weight: bold;
 }
 
