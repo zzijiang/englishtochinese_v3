@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Vocabulary Challenge</h1>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+        
+        <script>
+            // 获取当前题号并计算进度
+            let questionNumber = {{ question_number }};
+            let totalQuestions = 10;  // 设定总题数
+            let progress = (questionNumber / totalQuestions) * 100;
+        
+            // 更新进度条
+            document.getElementById("progress-bar").style.width = progress + "%";
+        </script>
+        
+        <h2>第 {{ question_number }} 题</h2>
+        <p class="word">{{ question.english }}</p>
+
+        <form id="quiz-form" action="{{ url_for('next_question') }}" method="post">
+            <div class="options">
+                {% for option in question.options %}
+                    <button type="button" class="option-btn" onclick="submitAnswer(this)" data-answer="{{ option }}">
+                        {{ option }}
+                    </button>
+                {% endfor %}
+            </div>
+            <p id="feedback" class="hidden"></p>  <!-- 这里用于显示正确或错误反馈 -->
+            <input type="hidden" name="answer" id="selected-answer">
+        </form>
+    </div>
+
+    <script>
+        function submitAnswer(button) {
+            // 获取用户选择的答案
+            let userAnswer = button.getAttribute("data-answer");
+            document.getElementById("selected-answer").value = userAnswer;
+
+            // 获取正确答案（从 Flask 传递过来）
+            let correctAnswer = "{{ question.correct_answer }}";
+            
+            // 禁用所有按钮，防止重复点击
+            let buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            // 反馈文本
+            let feedback = document.getElementById("feedback");
+
+            // 可能的动态 Emoji
+            let correctEmojis = ["🎉", "🥳", "👏", "🔥", "🚀", "🎯", "😃"];
+            let randomEmoji = correctEmojis[Math.floor(Math.random() * correctEmojis.length)];
+
+            if (userAnswer === correctAnswer) {
+                button.classList.add("correct");  // 绿色高亮
+                feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">${randomEmoji}</span>`;
+            } else {
+                button.classList.add("wrong");  // 红色高亮
+                feedback.innerHTML = `❌ 错误！<span class="black-text"> 正确答案：</span> <span class="green-text">${correctAnswer}</span>`;
+            }
+
+            // 显示反馈信息
+            feedback.classList.remove("hidden");
+
+            // 1.5 秒后自动提交表单
+            setTimeout(() => {
+                document.getElementById("quiz-form").submit();
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

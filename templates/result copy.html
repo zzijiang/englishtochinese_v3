@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试结果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>测试完成！</h1>
+        <p>你的得分：{{ score }} / {{ total }}</p>
+
+        {% if wrong_answers %}
+            <h2>以下是你的错题：</h2>
+            <ul class="wrong-list">
+                {% for item in wrong_answers %}
+                    <li>
+                        <strong>{{ item.english }}</strong>  
+                        <br>✅ 正确答案：<span class="correct">{{ item.correct }}</span> 
+                        <br>❌ 你的答案：<span class="wrong">{{ item.your_answer }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>🎉 恭喜你全部答对！</p>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="restart-btn">再来一局</a>
+    </div>
+</body>
+</html>

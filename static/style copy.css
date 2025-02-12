@@ -1,0 +1,141 @@
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 50px;
+    background-color: #f9f9f9;
+}
+
+/* 主要容器 */
+.container {
+    max-width: 450px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题 */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* 题目单词样式 */
+.word {
+    font-size: 60px;  /* 加大字体 */
+    font-weight: bold; /* 加粗 */
+    color: black;  /* 文字颜色 */
+    -webkit-text-stroke: 1px #3684DD; /* 文字外边框，适用于 Chrome/Safari */
+    text-stroke: 1px #3684DD; /* 标准 CSS 语法 */
+}
+
+/* 选项按钮样式 */
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.option-btn {
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.option-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* ====== 新增：错题列表样式 ====== */
+
+/* 错题标题 */
+h2.wrong-title {
+    color: #ff3b3b;
+    margin-top: 20px;
+}
+
+/* 错题列表整体样式 */
+.wrong-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* 每一道错题的样式 */
+.wrong-list li {
+    margin: 10px 0;
+    padding: 15px;
+    background: #ffecec;  /* 淡粉色背景 */
+    border-left: 5px solid #ff5c5c; /* 左侧红色标记 */
+    border-radius: 8px;
+    text-align: left;
+    font-size: 16px;
+    padding-left: 15px;
+}
+
+/* 正确答案（绿色） */
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+/* 用户错误答案（红色） */
+.wrong {
+    color: red;
+    font-weight: bold;
+}
+
+/* “再试一次” 按钮样式 */
+.restart-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: none;
+    background-color: #7cf17c;
+    color: black;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.restart-btn:hover {
+    background-color: #57d057;
+}
+
+#feedback {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 黑色的“正确答案”文字 */
+.black-text {
+    color: black;
+    font-weight: bold;
+}
+
+/* 绿色的正确答案 */
+.green-text {
+    color: green;
+    font-weight: bold;
+}
+
+

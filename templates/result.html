@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试结果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2/dist/index.umd.js"></script> <!-- 引入烟花动画库 -->
+</head>
+<body>
+    <div class="container">
+        <h1>测试完成！</h1>
+        <p>你的得分：{{ score }} / {{ total }}</p>
+
+        {% if score == total %}
+            <h2 class="congrats">🎉 恭喜你全部答对！🎉</h2>
+            <div id="fireworks-container"></div> <!-- 烟花动画的容器 -->
+        {% else %}
+            <h2>以下是你的错题：</h2>
+            <ul class="wrong-list">
+                {% for item in wrong_answers %}
+                    <li>
+                        <strong>{{ item.english }}</strong>  
+                        <br><span class="black-text">正确答案：</span> <span class="green-text">{{ item.correct }}</span>
+                        <br><span class="wrong">你的答案：{{ item.your_answer }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="restart-btn">再来一局</a>
+    </div>
+
+    <script>
+        // 如果用户满分，则启动烟花动画
+        {% if score == total %}
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById("fireworks-container");
+            container.style.position = "fixed";
+            container.style.top = "0";
+            container.style.left = "0";
+            container.style.width = "100vw";
+            container.style.height = "100vh";
+            container.style.pointerEvents = "none"; // 确保动画不会影响其他点击操作
+
+            // 初始化烟花
+            const fireworks = new Fireworks.default(container, {
+                autoresize: true,
+                opacity: 0.6,
+                acceleration: 1.05,
+                friction: 0.97,
+                gravity: 1.5,
+                particles: 100,
+                traceLength: 3,
+                traceSpeed: 10,
+                explosion: 8,
+                intensity: 20,
+                flickering: 50,
+                lineWidth: {
+                    explosion: { min: 1, max: 4 },
+                    trace: { min: 1, max: 2 }
+                },
+                brightness: { min: 50, max: 100 },
+                decay: { min: 0.02, max: 0.04 },
+                delay: { min: 30, max: 60 },
+                hue: { min: 0, max: 360 },
+                sound: {
+                    enabled: true, // 启用声音
+                    files: ["https://www.soundjay.com/misc/sounds/fireworks-1.mp3"],
+                    volume: { min: 1, max: 3 }
+                }
+            });
+
+            fireworks.start(); // 开始烟花动画
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
