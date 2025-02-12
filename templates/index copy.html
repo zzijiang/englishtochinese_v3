@@ -9,6 +9,21 @@
 <body>
     <div class="container">
         <h1>Vocabulary Challenge</h1>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+        
+        <script>
+            // 获取当前题号并计算进度
+            let questionNumber = {{ question_number }};
+            let totalQuestions = 10;  // 设定总题数
+            let progress = (questionNumber / totalQuestions) * 100;
+        
+            // 更新进度条
+            document.getElementById("progress-bar").style.width = progress + "%";
+        </script>
+        
         <h2>第 {{ question_number }} 题</h2>
         <p class="word">{{ question.english }}</p>
 
@@ -34,12 +49,22 @@
             // 获取正确答案（从 Flask 传递过来）
             let correctAnswer = "{{ question.correct_answer }}";
             
+            // 禁用所有按钮，防止重复点击
+            let buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
             // 反馈文本
             let feedback = document.getElementById("feedback");
+
+            // 可能的动态 Emoji
+            let correctEmojis = ["🎉", "🥳", "👏", "🔥", "🚀", "🎯", "😃"];
+            let randomEmoji = correctEmojis[Math.floor(Math.random() * correctEmojis.length)];
+
             if (userAnswer === correctAnswer) {
-                feedback.innerText = "✅ 正确！🎉";
-                feedback.style.color = "green";
+                button.classList.add("correct");  // 绿色高亮
+                feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">${randomEmoji}</span>`;
             } else {
+                button.classList.add("wrong");  // 红色高亮
                 feedback.innerHTML = `❌ 错误！<span class="black-text"> 正确答案：</span> <span class="green-text">${correctAnswer}</span>`;
             }
 

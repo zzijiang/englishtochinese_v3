@@ -10,72 +10,121 @@
     <div class="container">
         <h1>Vocabulary Challenge</h1>
 
+        <!-- 进度条 -->
         <div class="progress-bar">
-            <div class="progress-fill" id="progress-bar"></div>
+            <div class="progress-fill" id="progress-bar" style="width: 0%;"></div>
         </div>
-        
-        <script>
-            // 获取当前题号并计算进度
-            let questionNumber = {{ question_number }};
-            let totalQuestions = 10;  // 设定总题数
-            let progress = (questionNumber / totalQuestions) * 100;
-        
-            // 更新进度条
-            document.getElementById("progress-bar").style.width = progress + "%";
-        </script>
-        
-        <h2>第 {{ question_number }} 题</h2>
-        <p class="word">{{ question.english }}</p>
 
-        <form id="quiz-form" action="{{ url_for('next_question') }}" method="post">
-            <div class="options">
-                {% for option in question.options %}
-                    <button type="button" class="option-btn" onclick="submitAnswer(this)" data-answer="{{ option }}">
-                        {{ option }}
-                    </button>
-                {% endfor %}
-            </div>
-            <p id="feedback" class="hidden"></p>  <!-- 这里用于显示正确或错误反馈 -->
-            <input type="hidden" name="answer" id="selected-answer">
-        </form>
+        <h2 id="question-number">第 1 题</h2>
+        <p class="word" id="question-text">Loading...</p>
+
+        <div id="options-container" class="options"></div>
+
+        <p id="feedback" class="hidden"></p>
     </div>
 
     <script>
-        function submitAnswer(button) {
-            // 获取用户选择的答案
-            let userAnswer = button.getAttribute("data-answer");
-            document.getElementById("selected-answer").value = userAnswer;
+        let selectedAnswer = "";
+        let isProcessingAnswer = false;  // 添加标志位防止重复提交
 
-            // 获取正确答案（从 Flask 传递过来）
-            let correctAnswer = "{{ question.correct_answer }}";
+        function updateQuestion(data) {
+            // 清除反馈信息
+            const feedback = document.getElementById("feedback");
+            feedback.innerHTML = "";
+            feedback.classList.add("hidden");
+
+            document.getElementById("question-number").innerText = `第 ${data.question_number} 题`;
+            document.getElementById("question-text").innerText = data.english;
+
+            // 更新选项
+            let optionsHTML = "";
+            data.options.forEach(option => {
+                optionsHTML += `<button class="option-btn" onclick="submitAnswer(this)" data-answer="${option}">${option}</button>`;
+            });
+            document.getElementById("options-container").innerHTML = optionsHTML;
+
+            // 更新进度条
+            document.getElementById("progress-bar").style.width = data.progress + "%";
+
+            // 启用所有按钮
+            enableButtons(true);
             
-            // 禁用所有按钮，防止重复点击
-            let buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach(btn => btn.disabled = true);
-
-            // 反馈文本
-            let feedback = document.getElementById("feedback");
-
-            // 可能的动态 Emoji
-            let correctEmojis = ["🎉", "🥳", "👏", "🔥", "🚀", "🎯", "😃"];
-            let randomEmoji = correctEmojis[Math.floor(Math.random() * correctEmojis.length)];
-
-            if (userAnswer === correctAnswer) {
-                button.classList.add("correct");  // 绿色高亮
-                feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">${randomEmoji}</span>`;
-            } else {
-                button.classList.add("wrong");  // 红色高亮
-                feedback.innerHTML = `❌ 错误！<span class="black-text"> 正确答案：</span> <span class="green-text">${correctAnswer}</span>`;
-            }
-
-            // 显示反馈信息
-            feedback.classList.remove("hidden");
-
-            // 1.5 秒后自动提交表单
-            setTimeout(() => {
-                document.getElementById("quiz-form").submit();
-            }, 1500);
+            // 重置处理标志
+            isProcessingAnswer = false;
         }
+
+        function loadNextQuestion(firstLoad = false) {
+            document.getElementById("feedback").classList.add("hidden");
+
+            fetch("/next", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.finished) {
+                    window.location.href = data.redirect_url;
+                    return;
+                }
+                updateQuestion(data);
+            });
+        }
+
+        function enableButtons(enable) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(button => {
+                button.disabled = !enable;
+            });
+        }
+
+        async function submitAnswer(button) {
+            if (isProcessingAnswer) return;  // 如果正在处理答案，直接返回
+            isProcessingAnswer = true;  // 设置处理标志
+
+            // 禁用所有按钮
+            enableButtons(false);
+            
+            let userAnswer = button.getAttribute("data-answer");
+
+            try {
+                const response = await fetch("/next", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answer: userAnswer })
+                });
+                
+                const data = await response.json();
+                
+                if (data.finished) {
+                    window.location.href = data.redirect_url;
+                    return;
+                }
+
+                // 显示反馈
+                let feedback = document.getElementById("feedback");
+                if (data.is_correct) {
+                    feedback.innerHTML = `✅ 正确！ <span class="correct-emoji">🎉</span>`;
+                    feedback.style.color = "green";
+                } else {
+                    feedback.innerHTML = `❌ <span style="color: red">错误！</span><span class="black-text"> 正确答案：</span> <span class="green-text">${data.correct}</span>`;
+                }
+                feedback.classList.remove("hidden");
+
+                // 等待显示反馈后更新问题
+                setTimeout(() => {
+                    updateQuestion(data);
+                }, 1500);
+            } catch (error) {
+                console.error("Error submitting answer:", error);
+                isProcessingAnswer = false;  // 发生错误时重置处理标志
+                enableButtons(true);  // 重新启用按钮
+            }
+        }
+
+        // 页面首次加载时获取第一题
+        document.addEventListener("DOMContentLoaded", function() {
+            loadNextQuestion(true);
+        });
     </script>
 </body>
 </html>

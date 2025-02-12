@@ -9,11 +9,15 @@ body {
 /* 主要容器 */
 .container {
     max-width: 450px;
+    min-height: 500px; /* 添加固定最小高度 */
     margin: auto;
     padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;           /* 使用 flex 布局 */
+    flex-direction: column;  /* 垂直方向排列 */
+    position: relative;      /* 用于定位反馈信息 */
 }
 
 /* 标题 */
@@ -35,6 +39,7 @@ h2 {
     color: black;  /* 文字颜色 */
     -webkit-text-stroke: 1px #3684DD; /* 文字外边框，适用于 Chrome/Safari */
     text-stroke: 1px #3684DD; /* 标准 CSS 语法 */
+    margin: 20px 0;  /* 增加垂直边距 */
 }
 
 /* 选项按钮样式 */
@@ -42,7 +47,7 @@ h2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    margin-top: 20px;
+    margin: 20px 0;  /* 增加垂直边距 */
 }
 
 .option-btn {
